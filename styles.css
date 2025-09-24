@@ -11,12 +11,22 @@
 
 *{ box-sizing: border-box; }
 
-html,body{
-  height:100%;
-  margin:0;
-  background: radial-gradient(1200px 800px at 80% -10%, #1c2550 0%, var(--bg) 60%);
+html, body{
+  min-height: 100%;
+  margin: 0;
   color: var(--text);
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+}
+
+/* Hintergrund über die ganze Seite fixieren */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(1200px 800px at 80% -10%, #1c2550 0%, var(--bg) 60%);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .topbar{
@@ -138,30 +148,31 @@ input[type="checkbox"]{ width:18px; height:18px; }
 }
 .titlebar .badge{ white-space:nowrap; }
 
-/* Anzeige „Ihr seid …“ */
-.spycount {
-  color: #ff5b5b;           /* rot */
+/* Anzeige „Ihr seid …“ (eine zentrale Definition) */
+.spycount{
+  color: #ff5b5b;
   font-weight: 700;
   font-size: 20px;
-  text-align: center;       /* zentriert */
+  text-align: center;
   margin-top: 6px;
 }
 
-/* Rückseiten-Inhalt (älterer Ansatz – darf bleiben, schadet nicht) */
+/* (optional, falls irgendwo noch .backcontent genutzt wird) */
 .backcontent {
   display: flex;
   flex-direction: column;
   align-items: center; /* alles zentriert außer Label */
   justify-content: center;
-  gap: 14px; /* mehr Abstand zwischen den Blöcken */
+  gap: 14px;
   height: 100%;
   width: 100%;
   padding: 12px;
   box-sizing: border-box;
 }
 
-.backcontent .label {
-  align-self: flex-start;   /* bleibt links */
+/* Label-Styles – NEU, damit .label.center überall wirkt */
+.label.center{
+  text-align: center;
   font-size: 14px;
   color: var(--muted);
 }
@@ -173,27 +184,21 @@ input[type="checkbox"]{ width:18px; height:18px; }
   letter-spacing: .4px;
 }
 
-/* Spion-Anzeige (du hast sie schon – hier komplett) */
+/* Spion-Anzeige (falls separat verwendet) */
 .spy {
   color: #ff5b5b;
   font-weight: 900;
   font-size: 28px;
   text-align: center;
 }
-.spycount {
-  color: #ff5b5b;
-  font-weight: 700;
-  font-size: 20px;
-  text-align: center;
-}
 
 /* Hinweis am unteren Ende (älterer Ansatz) */
 .hint-bottom {
-  margin-top: auto;   /* schiebt den Hinweis nach unten */
+  margin-top: auto;
   text-align: center;
 }
 
-/* NEU: zentrierter Stack für die Rückseite (aktueller Ansatz) */
+/* NEU: zentrierter Stack für die Rückseite */
 .centerstack{
   display: flex;
   flex-direction: column;
@@ -214,3 +219,25 @@ input[type="checkbox"]{ width:18px; height:18px; }
 
 /* Rot-Färbung für Label + Hauptwort bei Spion */
 .red { color: #ff5b5b; }
+
+/* Abschnitt-Rahmen (für Setup-Gruppen) */
+.section{
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.section h3{
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: .3px;
+}
+
+/* kleine Helfer für Button-Reihen in Sektionen */
+.section .actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
