@@ -23,33 +23,55 @@
     ]},
   };
 
+  function defaultSelectedAllBase(){
+  return Object.fromEntries(Object.keys(BASE_CATS).map(k => [k, true]));
+}
+
   // Standardzustand
   const defaults = () => ({
-    players: ['Spieler 1','Spieler 2','Spieler 3'],
-    spyMode: 'fixed',           // 'fixed' | 'random-any' | 'random-range'
-    spies: 1,                   // für fixed
-    spiesMin: 1, spiesMax: 1,   // für range
-    categories: {               // Auswahl + eigene Kategorien
-      selected: { jobs:true, gegenstaende:true, orte:true },
-      custom: []                // {id, name, words:[]}
-    },
-    configSaved: false, 
-    started: false,
-    round: { index: 0, revealed: false, word: null, categoryKey: null, roles: [] },
-    usedWords: [],
-    revealSpyCount: true
-  });
+  players: ['Spieler 1','Spieler 2','Spieler 3'],
+  spyMode: 'fixed',
+  spies: 1,
+  spiesMin: 1, spiesMax: 1,
+  categories: {
+    selected: defaultSelectedAllBase(),   // <- NEU: alle Basis-Kategorien an
+    custom: []
+  },
+  configSaved: false, 
+  started: false,
+  round: { index: 0, revealed: false, word: null, categoryKey: null, roles: [] },
+  usedWords: [],
+  revealSpyCount: true,
+  ui: { collapsed: { cats: true, custom: true } }  // <- NEU: UI-Flags (beide zu)
+});
+
 
   function ensureState(app){
-    app.spion = app.spion || {};
-    // migrieren/auffüllen
-    app.spion = { ...defaults(), ...app.spion };
-    // falls selected fehlt
-    if (!app.spion.categories || !app.spion.categories.selected) {
-      app.spion.categories = { selected: { jobs:true, gegenstaende:true, orte:true }, custom: [] };
-    }
-    return app.spion;
+  app.spion = app.spion || {};
+  app.spion = { ...defaults(), ...app.spion };
+
+  // Kategorien-Objekt & Auswahl sicherstellen
+  if (!app.spion.categories) {
+    app.spion.categories = { selected: defaultSelectedAllBase(), custom: [] };
   }
+  if (!app.spion.categories.selected) {
+    app.spion.categories.selected = defaultSelectedAllBase();
+  } else {
+    // fehlende Basis-Kategorien auf true ergänzen (bestehende Auswahl respektieren)
+    for (const k of Object.keys(BASE_CATS)) {
+      if (!(k in app.spion.categories.selected)) {
+        app.spion.categories.selected[k] = true;
+      }
+    }
+  }
+
+  // UI-Flags
+  app.spion.ui = app.spion.ui || { collapsed: { cats: true, custom: true } };
+  app.spion.ui.collapsed = { cats: true, custom: true, ...(app.spion.ui.collapsed || {}) };
+
+  return app.spion;
+}
+
 
   function isConfigured(spion){
   if (!spion.configSaved) return false;
@@ -166,30 +188,48 @@ function renderSetup(root, spion, appState){
           </div>
         </section>
 
-        <!-- SECTION: Kategorien -->
+          <!-- ---------- Kategorien ---------- -->
         <section class="section" aria-labelledby="sec-cats">
-          <h3 id="sec-cats">Kategorien</h3>
+          <h3 id="sec-cats" style="display:none">Kategorien</h3>
 
-          <div class="actions" style="margin-bottom:8px;">
-            <button class="btn small ghost" id="allCats">Alle auswählen</button>
-            <button class="btn small ghost" id="noneCats">Keine</button>
+          <button class="collapse-toggle" id="toggleCats" aria-controls="catsPanel"
+                  aria-expanded="${!spion.ui.collapsed.cats}">
+            <span>🗂️ Kategorien</span>
+            <span class="chev">${spion.ui.collapsed.cats ? '▶' : '▼'}</span>
+          </button>
+
+          <div class="collapse-panel" id="catsPanel" style="display:${spion.ui.collapsed.cats ? 'none' : 'grid'}">
+            <div class="actions" style="margin-bottom:8px;">
+              <button class="btn small ghost" id="allCats">Alle auswählen</button>
+              <button class="btn small ghost" id="noneCats">Keine</button>
+            </div>
+
+            <div class="checklist" id="catList">${catList}</div>
+            <p class="hint">Du kannst eigene Kategorien unten ergänzen.</p>
           </div>
-
-          <div class="checklist" id="catList">${catList}</div>
-          <p class="hint">Du kannst eigene Kategorien unten ergänzen.</p>
         </section>
 
-        <!-- SECTION: Eigene Kategorie (OBEN) -->
+
+       <!-- ---------- Eigene Kategorie ---------- -->
         <section class="section" aria-labelledby="sec-custom">
-          <h3 id="sec-custom">Eigene Kategorie hinzufügen</h3>
+          <h3 id="sec-custom" style="display:none">Eigene Kategorie hinzufügen</h3>
 
-          <div class="row">
-            <input type="text" id="customCatName" placeholder="Name der Kategorie (z. B. Süßigkeiten)" />
-            <textarea id="customCatWords" rows="2" placeholder="Wörter, durch Komma getrennt (z. B. Schokolade, Gummibärchen, Keks)"></textarea>
-            <button class="btn small" id="addCustomCat">Hinzufügen</button>
-            <div id="customList" style="margin-top:8px;"></div>
+          <button class="collapse-toggle" id="toggleCustom" aria-controls="customPanel"
+                  aria-expanded="${!spion.ui.collapsed.custom}">
+            <span>➕ Eigene Kategorie hinzufügen</span>
+            <span class="chev">${spion.ui.collapsed.custom ? '▶' : '▼'}</span>
+          </button>
+
+          <div class="collapse-panel" id="customPanel" style="display:${spion.ui.collapsed.custom ? 'none' : 'grid'}">
+            <div class="row">
+              <input type="text" id="customCatName" placeholder="Name der Kategorie (z. B. Süßigkeiten)" />
+              <textarea id="customCatWords" rows="2" placeholder="Wörter, durch Komma getrennt (z. B. Schokolade, Gummibärchen, Keks)"></textarea>
+              <button class="btn small" id="addCustomCat">Hinzufügen</button>
+              <div id="customList" style="margin-top:8px;"></div>
+            </div>
           </div>
         </section>
+
 
         <!-- SECTION: Benutzte Wörter (UNTEN, getauscht) -->
         <section class="section" aria-labelledby="sec-used">
@@ -277,6 +317,14 @@ function renderSetup(root, spion, appState){
     window.__saveAppState(); renderSetup(root, spion, appState);
   });
 
+  // Toggle Kategorien
+$('#toggleCats').addEventListener('click', ()=>{
+  spion.ui = spion.ui || { collapsed: {} };
+  spion.ui.collapsed.cats = !spion.ui.collapsed.cats;
+  window.__saveAppState();
+  renderSetup(root, spion, appState);
+});
+
   // Eigene Kategorie hinzufügen
   $('#addCustomCat').addEventListener('click', ()=>{
     const name = ($('#customCatName').value || '').trim();
@@ -292,6 +340,15 @@ function renderSetup(root, spion, appState){
     toast('Kategorie hinzugefügt');
   });
 
+  // Toggle Custom
+$('#toggleCustom').addEventListener('click', ()=>{
+  spion.ui = spion.ui || { collapsed: {} };
+  spion.ui.collapsed.custom = !spion.ui.collapsed.custom;
+  window.__saveAppState();
+  renderSetup(root, spion, appState);
+});
+
+
   // Benutzte Wörter löschen
   $('#clearUsedWords').addEventListener('click', ()=>{
     if (!spion.usedWords?.length) { toast('Es gibt keine benutzten Wörter.'); return; }
@@ -302,6 +359,7 @@ function renderSetup(root, spion, appState){
     renderSetup(root, spion, appState);
     toast('Benutzte Wörter gelöscht.');
   });
+
 
   // kleine Liste eigener Kategorien anzeigen
   renderCustomList(spion);
