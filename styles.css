@@ -50,13 +50,13 @@ body::before{
   padding: 16px; box-shadow: var(--shadow);
 }
 
-.card button, .card a.primary{
+.card .btn, .card a.primary{
   width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   border: 1px solid rgba(255,255,255,.12);
   background: #202744; color: var(--text);
   padding: 12px 14px; border-radius: 14px; text-decoration: none; font-weight: 600;
 }
-.card button:hover, .card a.primary:hover{ filter: brightness(1.08); }
+.card .btn:hover, .card a.primary:hover{ filter: brightness(1.08); }
 
 .subtitle{ margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
 
@@ -174,7 +174,6 @@ input[type="checkbox"]{ width:18px; height:18px; }
 .label.center{
   text-align: center;
   font-size: 14px;
-  color: var(--muted);
 }
 
 .mainword {
@@ -218,6 +217,8 @@ input[type="checkbox"]{ width:18px; height:18px; }
 }
 
 /* Rot-Färbung für Label + Hauptwort bei Spion */
+/* Farben getrennt steuern */
+.muted { color: var(--muted); }
 .red { color: #ff5b5b; }
 
 /* Abschnitt-Rahmen (für Setup-Gruppen) */
@@ -249,4 +250,32 @@ input[type="checkbox"]{ width:18px; height:18px; }
   font-weight:700; font-size:16px; padding:0; cursor:pointer;
 }
 .collapse-toggle .chev{ opacity:.8; font-size:14px; }
+.collapse-panel{ margin-top:10px; display:grid; gap:12px; }
+
+
+/* Collapsible Sections */
+.collapse-toggle{
+  /* alle "Button"-Styles neutralisieren */
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+
+  /* Layout & Typo – matcht .section h3 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Text links, Pfeil rechts */
+  gap: 10px;
+  width: 100%;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 16px;          /* wie .section h3 */
+  letter-spacing: .3px;     /* wie .section h3 */
+  cursor: pointer;
+}
+
+.collapse-toggle:focus { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.collapse-toggle .chev{ opacity: .8; font-size: 14px; }
+
 .collapse-panel{ margin-top:10px; display:grid; gap:12px; }

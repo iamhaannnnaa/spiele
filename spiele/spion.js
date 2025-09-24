@@ -194,9 +194,10 @@ function renderSetup(root, spion, appState){
 
           <button class="collapse-toggle" id="toggleCats" aria-controls="catsPanel"
                   aria-expanded="${!spion.ui.collapsed.cats}">
-            <span>🗂️ Kategorien</span>
+            <span>Kategorien</span>
             <span class="chev">${spion.ui.collapsed.cats ? '▶' : '▼'}</span>
           </button>
+
 
           <div class="collapse-panel" id="catsPanel" style="display:${spion.ui.collapsed.cats ? 'none' : 'grid'}">
             <div class="actions" style="margin-bottom:8px;">
