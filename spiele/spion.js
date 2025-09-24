@@ -5,23 +5,108 @@
   const shuffle = (arr) => arr.map(v=>({v,r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
 
   // Basis-Kategorien mit Beispielwörtern
-  const BASE_CATS = {
-    jobs: { name:'Jobs', words:[
-      'Arzt','Lehrer','Polizist','Pilot','Bäcker','Programmierer','Gärtner','Kellner','Designer','Fotograf','Mechaniker','Tierarzt','Feuerwehrmann','Journalist','Architekt'
-    ]},
-    gegenstaende: { name:'Gegenstände', words:[
-      'Schlüssel','Uhr','Rucksack','Kamera','Regenschirm','Brille','Buch','Stift','Ball','Tasche','Telefon','Flasche','Laptop','Kopfhörer','Kerze'
-    ]},
-    orte: { name:'Orte', words:[
-      'Schule','Supermarkt','Strand','Park','Bahnhof','Flughafen','Kino','Museum','Bibliothek','Krankenhaus','Restaurant','Bäckerei','Schwimmbad','Zoo','Stadion'
-    ]},
-    laender: { name:'Länder', words:[
-      'Deutschland','Frankreich','Spanien','Italien','Österreich','Schweiz','Polen','Niederlande','Belgien','Portugal','Schweden','Norwegen','Dänemark','Griechenland','Türkei'
-    ]},
-    tiere: { name:'Tiere', words:[
-      'Hund','Katze','Pferd','Löwe','Tiger','Elefant','Fisch','Vogel','Pinguin','Eule','Affe','Giraffe','Bär','Känguru','Fuchs'
-    ]},
-  };
+  // Basis-Kategorien mit Beispielwörtern (ERWEITERT)
+const BASE_CATS = {
+  jobs: { name:'Jobs', words:[
+    'Arzt','Lehrer','Polizist','Pilot','Bäcker','Programmierer','Gärtner','Kellner','Designer','Fotograf',
+    'Mechaniker','Tierarzt','Feuerwehrmann','Journalist','Architekt','Friseur','Elektriker','Zahnarzt','Koch','Musiker'
+  ]},
+
+  gegenstaende: { name:'Gegenstände', words:[
+    'Schlüssel','Uhr','Rucksack','Kamera','Regenschirm','Brille','Buch','Stift','Ball','Tasche',
+    'Telefon','Flasche','Laptop','Kopfhörer','Kerze','Taschenlampe','Spiegel','Kamm','Klebeband','Schere'
+  ]},
+
+  orte: { name:'Orte', words:[
+    'Schule','Supermarkt','Strand','Park','Bahnhof','Flughafen','Kino','Museum','Bibliothek','Krankenhaus',
+    'Restaurant','Bäckerei','Schwimmbad','Zoo','Stadion','Spielplatz','Theater','Apotheke','Markt','Hotel'
+  ]},
+
+  laender: { name:'Länder', words:[
+    'Deutschland','Frankreich','Spanien','Italien','Österreich','Schweiz','Polen','Niederlande','Belgien','Portugal',
+    'Schweden','Norwegen','Dänemark','Griechenland','Türkei','Tschechien','Ungarn','Finnland','Irland','Kroatien'
+  ]},
+
+  tiere: { name:'Tiere', words:[
+    'Hund','Katze','Pferd','Löwe','Tiger','Elefant','Fisch','Vogel','Pinguin','Eule',
+    'Affe','Giraffe','Bär','Känguru','Fuchs','Delfin','Zebra','Nilpferd','Koala','Igel'
+  ]},
+
+  // NEU
+  sportarten: { name:'Sportarten', words:[
+    'Fußball','Basketball','Handball','Tennis','Volleyball','Schwimmen','Leichtathletik','Boxen','Turnen','Eishockey',
+    'Badminton','Rudern','Fechten','Ringen','Skifahren'
+  ]},
+
+  musikinstrumente: { name:'Musikinstrumente', words:[
+    'Gitarre','Klavier','Geige','Trommel','Flöte','Saxophon','Trompete','Cello','Harfe','Klarinette',
+    'Bass','Orgel','Ukulele','Pauke','Xylophon'
+  ]},
+
+  fahrzeuge: { name:'Fahrzeuge', words:[
+    'Auto','Fahrrad','Bus','Zug','U-Bahn','Flugzeug','Schiff','Motorrad','Roller','Traktor',
+    'Hubschrauber','LKW','Segelboot','Kranwagen','U-Boot'
+  ]},
+
+  lebensmittel: { name:'Lebensmittel', words:[
+    'Brot','Käse','Milch','Eier','Butter','Nudeln','Reis','Tomate','Gurke','Apfel',
+    'Banane','Karotte','Schokolade','Joghurt','Müsli'
+  ]},
+
+  getraenke: { name:'Getränke', words:[
+    'Wasser','Apfelsaft','Orangensaft','Limonade','Tee','Kaffee','Kakao','Milchshake','Eistee','Cola',
+    'Traubensaft','Mineralwasser','Schorle','Energy-Drink','Ingwertee'
+  ]},
+
+  farben: { name:'Farben', words:[
+    'Rot','Blau','Gelb','Grün','Orange','Lila','Rosa','Braun','Schwarz','Weiß',
+    'Türkis','Grau','Beige','Gold','Silber'
+  ]},
+
+  moebel: { name:'Möbel', words:[
+    'Stuhl','Tisch','Sofa','Bett','Schrank','Regal','Kommode','Schreibtisch','Hocker','Nachttisch',
+    'Spiegel','Teppich','Lampe','Vitrine','Garderobe'
+  ]},
+
+  schulfaecher: { name:'Schulfächer', words:[
+    'Mathe','Deutsch','Englisch','Biologie','Chemie','Physik','Geschichte','Erdkunde','Kunst','Musik',
+    'Sport','Informatik','Spanisch','Französisch','Ethik'
+  ]},
+
+  werkzeuge: { name:'Werkzeuge', words:[
+    'Hammer','Schraubenzieher','Zange','Säge','Bohrmaschine','Wasserwaage','Metermaß','Cuttermesser','Schraubenschlüssel','Zollstock',
+    'Feile','Schleifpapier','Dübel','Holzleim','Pinsel'
+  ]},
+
+  kleidung: { name:'Kleidung', words:[
+    'T-Shirt','Hose','Pullover','Jacke','Mantel','Kleid','Rock','Schuhe','Socken','Mütze',
+    'Schal','Handschuhe','Hemd','Jeans','Shorts'
+  ]},
+
+  wetter: { name:'Wetter', words:[
+    'Sonne','Regen','Schnee','Gewitter','Wind','Nebel','Hagel','Sturm','Hitze','Kälte',
+    'Regenbogen','Bewölkung','Dürre','Mild','Frost'
+  ]},
+
+    freizeitorte: { name:'Freizeitorte (jugendlich)', words:[
+    'Bar','Club','Freibad','Skatepark','Shisha-Bar','Bowlingbahn','Trampolinpark','Boulderhalle','Kletterpark',
+    'LaserTag','Escape Room','Konzert','Festival','Open-Air','Eisdiele','Bubble-Tea-Laden','Gaming-Lounge',
+    'Karaoke-Bar','Arcade','Burgerladen','Pizzeria','Imbiss','Foodcourt','Badesee','Strandbar',
+    'Beachvolleyballfeld','Basketballplatz','Fußballkäfig','Chillwiese','Stadtpark'
+  ]},
+
+  freizeitaktivitaeten: { name:'Freizeitaktivitäten', words:[
+    'Skaten','Zocken','Parkour','Graffiti','Longboarden','Streetball','Breakdance','DJing','Streamen',
+    'Fotografie','Scootern','Inline-Skaten','Bouldern','Geocaching','Klettern'
+  ]},
+
+  streetfood: { name:'Streetfood & Drinks', words:[
+    'Döner','Pizza','Burger','Pommes','Chicken Nuggets','Wrap','Sushi','Tacos','Burrito','Bubble Tea',
+    'Eistee','Milkshake','Cookie','Muffin','Hotdog'
+  ]},
+
+};
+
 
   function defaultSelectedAllBase(){
   return Object.fromEntries(Object.keys(BASE_CATS).map(k => [k, true]));
@@ -410,11 +495,13 @@ $('#toggleCustom').addEventListener('click', ()=>{
   }
 
   function selectedCategories(spion){
-    const map = allCategoryMap(spion);
-    const keys = Object.keys(spion.categories.selected).filter(k => spion.categories.selected[k]);
-    const words = keys.flatMap(k => map[k]?.words || []);
-    return { keys, words, totalWords: words.length };
-  }
+  const map  = allCategoryMap(spion);
+  const keys = Object.keys(spion.categories.selected).filter(k => spion.categories.selected[k]);
+  // Duplikate vermeiden:
+  const words = [...new Set(keys.flatMap(k => map[k]?.words || []))];
+  return { keys, words, totalWords: words.length };
+}
+
   
   function getAvailableWords(spion){
   const all = selectedCategories(spion).words;
