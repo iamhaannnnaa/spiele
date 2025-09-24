@@ -129,3 +129,11 @@ input[type="checkbox"]{ width:18px; height:18px; }
 .face.back{ transform: rotateY(180deg); }
 .word{ font-size: 26px; font-weight: 800; letter-spacing:.4px; }
 .spy{ color: #ff5b5b; font-weight: 900; font-size: 28px; }
+
+.titlebar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.titlebar .badge{ white-space:nowrap; }
