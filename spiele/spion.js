@@ -33,6 +33,7 @@
       selected: { jobs:true, gegenstaende:true, orte:true },
       custom: []                // {id, name, words:[]}
     },
+    configSaved: false, 
     started: false,
     round: { index: 0, revealed: false, word: null, categoryKey: null, roles: [] },
     usedWords: [],
@@ -51,6 +52,7 @@
   }
 
   function isConfigured(spion){
+  if (!spion.configSaved) return false;
   const playersOk = Array.isArray(spion.players) && spion.players.length >= 3;
   const sel = selectedCategories(spion);
   const wordsOk = sel.totalWords > 0;
@@ -97,7 +99,7 @@
       <article class="card">
         <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
           <a href="#/" class="btn small">← Menü</a>
-          <a href="#/spion/play" class="btn small ghost" id="goPlay">Zum Spiel</a>
+          <a href="#/spion" class="btn small ghost" id="goPlay">Zum Spiel</a>
         </div>
         <h2>🕵️‍♀️ Spion – Einstellungen</h2>
         <p class="subtitle">Spieler, Spione & Kategorien festlegen. Alles wird lokal gespeichert.</p>
@@ -119,33 +121,45 @@
           </div>
 
           <div class="row">
-            <label class="title">Anzahl Spione</label>
-            <div class="row">
-              <select id="spyMode">
-                <option value="fixed" ${spion.spyMode==='fixed'?'selected':''}>Fixe Anzahl</option>
-                <option value="random-any" ${spion.spyMode==='random-any'?'selected':''}>Zufällig (1..Spieleranzahl)</option>
-                <option value="random-range" ${spion.spyMode==='random-range'?'selected':''}>Zufällig im Bereich</option>
-              </select>
-            </div>
+  <label class="title">Anzahl Spione</label>
 
-          <div class="row">
+        <div class="row">
+            <select id="spyMode">
+            <option value="fixed" ${spion.spyMode==='fixed'?'selected':''}>Fixe Anzahl</option>
+            <option value="random-any" ${spion.spyMode==='random-any'?'selected':''}>Zufällig (1..Spieleranzahl)</option>
+            <option value="random-range" ${spion.spyMode==='random-range'?'selected':''}>Zufällig im Bereich</option>
+            </select>
+        </div>
+
+        <!-- Dein Block bleibt: Info für Spione -->
+        <div class="row">
             <label class="title">Info für Spione</label>
             <label style="display:flex; align-items:center; gap:10px;">
-                <input type="checkbox" id="revealSpyCount" ${spion.revealSpyCount ? 'checked' : ''}>
-                Spione sehen, wie viele Spione es gibt
+            <input type="checkbox" id="revealSpyCount" ${spion.revealSpyCount ? 'checked' : ''}>
+            Spione sehen, wie viele Spione es gibt
             </label>
-           </div>
+        </div>
 
+        <!-- Dynamischer Hinweis für "Beliebig" -->
+        <div class="hint" id="spyAnyHint" style="display:${spion.spyMode==='random-any'?'block':'none'}">
+            Zufällig: <strong>1–${spion.players.length}</strong> (aktuell ${spion.players.length} Spieler)
+        </div>
 
-            <div class="row inline" id="spyFixed" style="display:${spion.spyMode==='fixed'?'grid':'none'}">
-              <input type="number" id="spyCount" min="1" max="${spion.players.length}" value="${spion.spies}"/>
-              <div class="hint">mind. 1, max. Spieleranzahl</div>
+        <!-- Fixe Anzahl -->
+        <div class="row inline" id="spyFixed" style="display:${spion.spyMode==='fixed'?'grid':'none'}">
+            <input type="number" id="spyCount" min="1" max="${spion.players.length}" value="${spion.spies}"/>
+            <div class="hint">min 1, max <strong>${spion.players.length}</strong></div>
+        </div>
+
+        <!-- Bereich -->
+        <div class="row inline" id="spyRange" style="display:${spion.spyMode==='random-range'?'grid':'none'}">
+            <input type="number" id="spyMin" min="1" max="${spion.players.length}" value="${spion.spiesMin}"/>
+            <input type="number" id="spyMax" min="1" max="${spion.players.length}" value="${spion.spiesMax}"/>
+            <div class="hint" id="spyRangeHint" style="grid-column:1/-1;">
+            erlaubt: <strong>1–${spion.players.length}</strong> (aktuell ${spion.players.length} Spieler)
             </div>
-
-            <div class="row inline" id="spyRange" style="display:${spion.spyMode==='random-range'?'grid':'none'}">
-              <input type="number" id="spyMin" min="1" max="${spion.players.length}" value="${spion.spiesMin}"/>
-              <input type="number" id="spyMax" min="1" max="${spion.players.length}" value="${spion.spiesMax}"/>
-            </div>
+        </div>
+    
           </div>
 
           <div class="row">
@@ -208,11 +222,14 @@
 
     // Spy mode
     $('#spyMode').addEventListener('change', (e)=>{
-      spion.spyMode = e.target.value;
-      window.__saveAppState();
-      $('#spyFixed').style.display = spion.spyMode==='fixed' ? 'grid' : 'none';
-      $('#spyRange').style.display = spion.spyMode==='random-range' ? 'grid' : 'none';
+    spion.spyMode = e.target.value;
+    window.__saveAppState();
+    $('#spyFixed').style.display = spion.spyMode==='fixed' ? 'grid' : 'none';
+    $('#spyRange').style.display = spion.spyMode==='random-range' ? 'grid' : 'none';
+    const anyHint = $('#spyAnyHint');
+    if (anyHint) anyHint.style.display = spion.spyMode==='random-any' ? 'block' : 'none';
     });
+
     const clampSpies = () => {
       const max = spion.players.length;
       spion.spies = Math.max(1, Math.min(max, parseInt($('#spyCount')?.value || spion.spies,10)));
@@ -278,6 +295,8 @@
       if (spion.players.length < 3) { toast('Mindestens 3 Spieler.'); return; }
       const sel = selectedCategories(spion);
       if (sel.totalWords === 0) { toast('Mindestens 1 Kategorie mit Wörtern auswählen.'); return; }
+      spion.configSaved = true;        // 👈 NEU: Konfiguration aktiv markieren
+        window.__saveAppState();
       location.hash = '#/spion/play';
     });
 
@@ -451,6 +470,13 @@ function addUsedWord(spion, word){
   function startNewRound(spion){
     const n = spion.players.length;
     const max = n;
+        // Wenn keine Wörter verfügbar sind → zurück ins Setup
+    if (selectedCategories(spion).totalWords === 0) {
+    toast('Bitte mindestens eine Kategorie mit Wörtern auswählen.');
+    location.hash = '#/spion/setup';
+    return;
+    }
+
     // Anzahl Spione bestimmen
     let spiesN = 1;
     if (spion.spyMode === 'fixed') {
