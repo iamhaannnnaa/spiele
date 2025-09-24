@@ -379,7 +379,12 @@ function addUsedWord(spion, word){
 
     <div class="titlebar">
       <h2>🕵️‍♀️ Spion – Spiel</h2>
-      ${spion.started ? `<span class="badge">Spieler ${spion.round.index + 1} / ${spion.players.length}</span>` : ``}
+      ${
+  spion.started && spion.round.index < spion.players.length
+    ? `<span class="badge">Spieler ${spion.round.index + 1} / ${spion.players.length}</span>`
+    : ``
+}
+
     </div>
 
     <p class="subtitle">Gib das Handy reihum weiter und deckt eure Karten nacheinander auf.</p>
@@ -430,38 +435,38 @@ function addUsedWord(spion, word){
       <div class="flip ${spion.round.revealed ? 'revealed' : ''}" id="flip"
            role="button" tabindex="0" aria-label="Karte aufdecken oder weitergeben">
 
+        <!-- FRONT -->
         <div class="face front">
           <div class="word">${escapeHtml(name)}</div>
           <div class="hint">Tippe, um die Karte aufzudecken</div>
         </div>
 
+        <!-- BACK -->
         <div class="face back">
           ${
             spion.round.roles[i] === 'spy'
               ? `
-                <div class="backcontent">
+                <div class="centerstack">
                   <div class="spy">SPION</div>
-                  ${
-                    spion.revealSpyCount
-                      ? `<div class="spycount">Ihr seid ${spion.round.spiesCount}</div>`
-                      : ``
-                  }
-                  <div class="hint hint-bottom">Tippe erneut, um weiterzugeben</div>
+                  ${spion.revealSpyCount ? `<div class="spycount">Ihr seid ${spion.round.spiesCount}</div>` : ``}
+                  <div class="hint hint-mid">Tippe erneut, um weiterzugeben</div>
                 </div>
               `
               : `
-                <div class="backcontent">
-                  <div class="label">Wort</div>
+                <div class="centerstack">
+                  <div class="label center">Wort</div>
                   <div class="word mainword">${escapeHtml(spion.round.word)}</div>
-                  <div class="hint hint-bottom">Tippe erneut, um weiterzugeben</div>
+                  <div class="hint hint-mid">Tippe erneut, um weiterzugeben</div>
                 </div>
               `
           }
         </div>
+
       </div>
     </div>
   </div>
 `;
+
 
 
 

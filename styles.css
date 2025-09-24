@@ -116,7 +116,7 @@ input[type="checkbox"]{ width:18px; height:18px; }
 /* Flip Card fürs Spiel */
 .stage{ perspective: 1000px; margin-top: 12px; }
 .flip{
-  position: relative; width: 100%; height: 220px;
+  position: relative; width: 100%; height: 360px; /* höher */
   transform-style: preserve-3d; transition: transform .35s ease;
 }
 .flip.revealed{ transform: rotateY(180deg); }
@@ -138,6 +138,7 @@ input[type="checkbox"]{ width:18px; height:18px; }
 }
 .titlebar .badge{ white-space:nowrap; }
 
+/* Anzeige „Ihr seid …“ */
 .spycount {
   color: #ff5b5b;           /* rot */
   font-weight: 700;
@@ -146,7 +147,7 @@ input[type="checkbox"]{ width:18px; height:18px; }
   margin-top: 6px;
 }
 
-/* Rückseiten-Inhalt */
+/* Rückseiten-Inhalt (älterer Ansatz – darf bleiben, schadet nicht) */
 .backcontent {
   display: flex;
   flex-direction: column;
@@ -172,7 +173,7 @@ input[type="checkbox"]{ width:18px; height:18px; }
   letter-spacing: .4px;
 }
 
-/* Spion-Anzeige */
+/* Spion-Anzeige (du hast sie schon – hier komplett) */
 .spy {
   color: #ff5b5b;
   font-weight: 900;
@@ -186,13 +187,27 @@ input[type="checkbox"]{ width:18px; height:18px; }
   text-align: center;
 }
 
-/* Hinweis am unteren Ende */
+/* Hinweis am unteren Ende (älterer Ansatz) */
 .hint-bottom {
   margin-top: auto;   /* schiebt den Hinweis nach unten */
   text-align: center;
 }
 
-/* Karte allgemein höher machen */
-.flip {
-  height: 300px; /* vorher 220px */
+/* NEU: zentrierter Stack für die Rückseite (aktueller Ansatz) */
+.centerstack{
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* horizontal mittig */
+  justify-content: center; /* vertikal mittig */
+  gap: 8px;                /* kleiner, sauberer Abstand */
+  height: 100%;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* NEU: kleiner Zusatzabstand vor dem mittigen Hinweis */
+.hint-mid{
+  margin-top: 6px;
+  text-align: center;
 }
