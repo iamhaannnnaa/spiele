@@ -137,3 +137,11 @@ input[type="checkbox"]{ width:18px; height:18px; }
   gap:12px;
 }
 .titlebar .badge{ white-space:nowrap; }
+
+.spycount {
+  color: #ff5b5b;           /* rot */
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;       /* zentriert */
+  margin-top: 6px;
+}

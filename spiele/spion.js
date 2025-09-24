@@ -441,7 +441,7 @@ function addUsedWord(spion, word){
               ? `
                 <div>
                   <div class="spy">SPION</div>
-                  ${spion.revealSpyCount ? `<div class="hint">Ihr seid ${spion.round.spiesCount}</div>` : ``}
+                  ${spion.revealSpyCount ? `<div class="spycount">Ihr seid ${spion.round.spiesCount}</div>` : ``}
                   <div class="hint">Tippe erneut, um weiterzugeben</div>
                 </div>
               `
@@ -459,6 +459,7 @@ function addUsedWord(spion, word){
     </div>
   </div>
 `;
+
 
 
 
