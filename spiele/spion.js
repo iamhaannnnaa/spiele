@@ -34,7 +34,9 @@
       custom: []                // {id, name, words:[]}
     },
     started: false,
-    round: { index: 0, revealed: false, word: null, categoryKey: null, roles: [] }
+    round: { index: 0, revealed: false, word: null, categoryKey: null, roles: [] },
+    usedWords: [],
+    revealSpyCount: true
   });
 
   function ensureState(app){
@@ -105,6 +107,15 @@
               </select>
             </div>
 
+          <div class="row">
+            <label class="title">Info für Spione</label>
+            <label style="display:flex; align-items:center; gap:10px;">
+                <input type="checkbox" id="revealSpyCount" ${spion.revealSpyCount ? 'checked' : ''}>
+                Spione sehen, wie viele Spione es gibt
+            </label>
+           </div>
+
+
             <div class="row inline" id="spyFixed" style="display:${spion.spyMode==='fixed'?'grid':'none'}">
               <input type="number" id="spyCount" min="1" max="${spion.players.length}" value="${spion.spies}"/>
               <div class="hint">mind. 1, max. Spieleranzahl</div>
@@ -124,6 +135,15 @@
             </div>
             <div class="checklist" id="catList">${catList}</div>
             <p class="hint">Du kannst eigene Kategorien unten ergänzen.</p>
+          </div>
+
+          <div class="row">
+            <label class="title">Benutzte Wörter</label>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <span class="badge">benutzt: ${spion.usedWords?.length || 0}</span>
+                <button class="btn small ghost" id="clearUsedWords">Verwendete Wörter löschen</button>
+            </div>
+            <p class="hint">Nur der Wort-Verlauf wird gelöscht. Deine Spieler & Einstellungen bleiben.</p>
           </div>
 
           <div class="row">
@@ -183,6 +203,12 @@
     $('#spyFixed')?.addEventListener('input', clampSpies);
     $('#spyRange')?.addEventListener('input', clampSpies);
 
+    $('#revealSpyCount').addEventListener('change', (e)=>{
+    spion.revealSpyCount = e.target.checked;
+    window.__saveAppState();
+    });
+
+
     // Kategorien toggles
     $('#catList').addEventListener('change', (e)=>{
       if (e.target.matches('input[type="checkbox"][data-cat]')) {
@@ -198,6 +224,16 @@
     $('#noneCats').addEventListener('click', ()=>{
       Object.keys(allCategoryMap(spion)).forEach(k => spion.categories.selected[k] = false);
       window.__saveAppState(); renderSetup(root, spion, appState);
+    });
+     
+    $('#clearUsedWords').addEventListener('click', ()=>{
+    if (!spion.usedWords?.length) { toast('Es gibt keine benutzten Wörter.'); return; }
+    const ok = confirm('Benutzte Wörter wirklich löschen?\nDann können Wörter wieder gezogen werden.');
+    if (!ok) return;
+    spion.usedWords = [];
+    window.__saveAppState();
+    renderSetup(root, spion, appState);
+    toast('Benutzte Wörter gelöscht.');
     });
 
     // Eigene Kategorie hinzufügen
@@ -267,6 +303,19 @@
     const words = keys.flatMap(k => map[k]?.words || []);
     return { keys, words, totalWords: words.length };
   }
+  
+  function getAvailableWords(spion){
+  const all = selectedCategories(spion).words;
+  if (!all.length) return [];
+  const usedSet = new Set(spion.usedWords || []);
+  return all.filter(w => !usedSet.has(w));
+}
+
+function addUsedWord(spion, word){
+  spion.usedWords = spion.usedWords || [];
+  if (!spion.usedWords.includes(word)) spion.usedWords.push(word);
+}
+
 
   function renderCustomList(spion){
     const list = $('#customList');
@@ -339,12 +388,16 @@
             </div>
             <div class="face back">
               ${spion.round.roles[i] === 'spy'
-                ? `<div class="spy">SPION</div>`
+                ? `<div>
+                    <div class="spy">SPION</div>
+                    ${spion.revealSpyCount ? `<div class="hint">Ihr seid ${spion.round.spiesCount}</div>` : ``}
+                    </div>`
                 : `<div>
-                     <div class="hint">Wort</div>
-                     <div class="word">${escapeHtml(spion.round.word)}</div>
-                   </div>`
-              }
+                    <div class="hint">Wort</div>
+                    <div class="word">${escapeHtml(spion.round.word)}</div>
+                    </div>`
+                }
+
             </div>
           </div>
         </div>
@@ -392,16 +445,24 @@
     }
     spiesN = Math.min(spiesN, n); // Sicherheit
 
-    // Wort auswählen
-    const sel = selectedCategories(spion);
-    const word = sel.words.length ? sel.words[randInt(0, sel.words.length-1)] : 'Wort';
+    // Wort auswählen – ohne Wiederholung
+    let pool = getAvailableWords(spion);
+    if (pool.length === 0) {
+    // Alles aufgebraucht → automatisch zurücksetzen (nur Wortpool)
+    spion.usedWords = [];
+    pool = getAvailableWords(spion);
+    toast('Alle Wörter wurden schon benutzt – Pool zurückgesetzt.');
+    }
+    const word = pool[randInt(0, pool.length - 1)];
+    addUsedWord(spion, word);
+
 
     // Rollen vorbereiten
     const roles = Array(spiesN).fill('spy').concat(Array(n - spiesN).fill('word'));
     const shuffled = shuffle(roles);
 
     spion.started = true;
-    spion.round = { index: 0, revealed: false, word, roles: shuffled };
+    spion.round = { index: 0, revealed: false, word, roles: shuffled , spiesCount: spiesN };
   }
 
   function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
