@@ -90,21 +90,26 @@
 }
 
 
-  // ---------- Setup View ----------
-  function renderSetup(root, spion, appState){
-    const playerInputs = spion.players.map((name,i)=>playerRow(i+1,name)).join('');
-    const catList = renderCategoryChecklist(spion);
+// ---------- Setup View ----------
+function renderSetup(root, spion, appState){
+  const playerInputs = spion.players.map((name,i)=>playerRow(i+1,name)).join('');
+  const catList = renderCategoryChecklist(spion);
 
-    root.innerHTML = `
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
-          <a href="#/" class="btn small">← Menü</a>
-          <a href="#/spion" class="btn small ghost" id="goPlay">Zum Spiel</a>
-        </div>
-        <h2>🕵️‍♀️ Spion – Einstellungen</h2>
-        <p class="subtitle">Spieler, Spione & Kategorien festlegen. Alles wird lokal gespeichert.</p>
+  root.innerHTML = `
+    <article class="card">
+      <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
+        <a href="#/" class="btn small">← Menü</a>
+        <a href="#/spion" class="btn small ghost" id="goPlay">Zum Spiel</a>
+      </div>
 
-        <div class="form">
+      <h2>🕵️‍♀️ Spion – Einstellungen</h2>
+      <p class="subtitle">Spieler, Spione & Kategorien festlegen. Alles wird lokal gespeichert.</p>
+
+      <div class="form">
+
+        <!-- SECTION: Spieler -->
+        <section class="section" aria-labelledby="sec-players">
+          <h3 id="sec-players">Spieler</h3>
 
           <div class="row">
             <label class="title">Anzahl Spieler</label>
@@ -119,152 +124,179 @@
             <label class="title">Namen</label>
             <div class="players" id="playersBox">${playerInputs}</div>
           </div>
+        </section>
+
+        <!-- SECTION: Spione -->
+        <section class="section" aria-labelledby="sec-spies">
+          <h3 id="sec-spies">Spione</h3>
 
           <div class="row">
-  <label class="title">Anzahl Spione</label>
+            <label class="title">Anzahl Spione</label>
+            <div class="row">
+              <select id="spyMode">
+                <option value="fixed" ${spion.spyMode==='fixed'?'selected':''}>Fixe Anzahl</option>
+                <option value="random-any" ${spion.spyMode==='random-any'?'selected':''}>Zufällig (1..Spieleranzahl)</option>
+                <option value="random-range" ${spion.spyMode==='random-range'?'selected':''}>Zufällig im Bereich</option>
+              </select>
+            </div>
+          </div>
 
-        <div class="row">
-            <select id="spyMode">
-            <option value="fixed" ${spion.spyMode==='fixed'?'selected':''}>Fixe Anzahl</option>
-            <option value="random-any" ${spion.spyMode==='random-any'?'selected':''}>Zufällig (1..Spieleranzahl)</option>
-            <option value="random-range" ${spion.spyMode==='random-range'?'selected':''}>Zufällig im Bereich</option>
-            </select>
-        </div>
-
-        <!-- Dein Block bleibt: Info für Spione -->
-        <div class="row">
+          <div class="row">
             <label class="title">Info für Spione</label>
             <label style="display:flex; align-items:center; gap:10px;">
-            <input type="checkbox" id="revealSpyCount" ${spion.revealSpyCount ? 'checked' : ''}>
-            Spione sehen, wie viele Spione es gibt
+              <input type="checkbox" id="revealSpyCount" ${spion.revealSpyCount ? 'checked' : ''}>
+              Spione sehen, wie viele Spione es gibt
             </label>
-        </div>
+          </div>
 
-        <!-- Dynamischer Hinweis für "Beliebig" -->
-        <div class="hint" id="spyAnyHint" style="display:${spion.spyMode==='random-any'?'block':'none'}">
+          <div class="hint" id="spyAnyHint" style="display:${spion.spyMode==='random-any'?'block':'none'}">
             Zufällig: <strong>1–${spion.players.length}</strong> (aktuell ${spion.players.length} Spieler)
-        </div>
+          </div>
 
-        <!-- Fixe Anzahl -->
-        <div class="row inline" id="spyFixed" style="display:${spion.spyMode==='fixed'?'grid':'none'}">
+          <div class="row inline" id="spyFixed" style="display:${spion.spyMode==='fixed'?'grid':'none'}">
             <input type="number" id="spyCount" min="1" max="${spion.players.length}" value="${spion.spies}"/>
             <div class="hint">min 1, max <strong>${spion.players.length}</strong></div>
-        </div>
+          </div>
 
-        <!-- Bereich -->
-        <div class="row inline" id="spyRange" style="display:${spion.spyMode==='random-range'?'grid':'none'}">
+          <div class="row inline" id="spyRange" style="display:${spion.spyMode==='random-range'?'grid':'none'}">
             <input type="number" id="spyMin" min="1" max="${spion.players.length}" value="${spion.spiesMin}"/>
             <input type="number" id="spyMax" min="1" max="${spion.players.length}" value="${spion.spiesMax}"/>
             <div class="hint" id="spyRangeHint" style="grid-column:1/-1;">
-            erlaubt: <strong>1–${spion.players.length}</strong> (aktuell ${spion.players.length} Spieler)
+              erlaubt: <strong>1–${spion.players.length}</strong> (aktuell ${spion.players.length} Spieler)
             </div>
-        </div>
-    
+          </div>
+        </section>
+
+        <!-- SECTION: Kategorien -->
+        <section class="section" aria-labelledby="sec-cats">
+          <h3 id="sec-cats">Kategorien</h3>
+
+          <div class="actions" style="margin-bottom:8px;">
+            <button class="btn small ghost" id="allCats">Alle auswählen</button>
+            <button class="btn small ghost" id="noneCats">Keine</button>
           </div>
 
-          <div class="row">
-            <label class="title">Kategorien</label>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
-              <button class="btn small ghost" id="allCats">Alle auswählen</button>
-              <button class="btn small ghost" id="noneCats">Keine</button>
-            </div>
-            <div class="checklist" id="catList">${catList}</div>
-            <p class="hint">Du kannst eigene Kategorien unten ergänzen.</p>
-          </div>
+          <div class="checklist" id="catList">${catList}</div>
+          <p class="hint">Du kannst eigene Kategorien unten ergänzen.</p>
+        </section>
+
+        <!-- SECTION: Eigene Kategorie (OBEN) -->
+        <section class="section" aria-labelledby="sec-custom">
+          <h3 id="sec-custom">Eigene Kategorie hinzufügen</h3>
 
           <div class="row">
-            <label class="title">Benutzte Wörter</label>
-            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                <span class="badge">benutzt: ${spion.usedWords?.length || 0}</span>
-                <button class="btn small ghost" id="clearUsedWords">Verwendete Wörter löschen</button>
-            </div>
-            <p class="hint">Nur der Wort-Verlauf wird gelöscht. Deine Spieler & Einstellungen bleiben.</p>
-          </div>
-
-          <div class="row">
-            <label class="title">Eigene Kategorie hinzufügen</label>
             <input type="text" id="customCatName" placeholder="Name der Kategorie (z. B. Süßigkeiten)" />
             <textarea id="customCatWords" rows="2" placeholder="Wörter, durch Komma getrennt (z. B. Schokolade, Gummibärchen, Keks)"></textarea>
             <button class="btn small" id="addCustomCat">Hinzufügen</button>
             <div id="customList" style="margin-top:8px;"></div>
           </div>
+        </section>
+
+        <!-- SECTION: Benutzte Wörter (UNTEN, getauscht) -->
+        <section class="section" aria-labelledby="sec-used">
+          <h3 id="sec-used">Benutzte Wörter</h3>
 
           <div class="row">
-            <button class="btn accent" id="saveGo">Speichern & Weiter</button>
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <span class="badge">benutzt: ${spion.usedWords?.length || 0}</span>
+              <button class="btn small ghost" id="clearUsedWords">Verwendete Wörter löschen</button>
+            </div>
+            <p class="hint">Nur der Wort-Verlauf wird gelöscht. Deine Spieler & Einstellungen bleiben.</p>
           </div>
+        </section>
+
+        <!-- ACTION -->
+        <div class="row">
+          <button class="btn accent" id="saveGo">Speichern & Weiter</button>
         </div>
-      </article>
-    `;
+      </div>
+    </article>
+  `;
 
-    // Events
-    $('#applyCount').addEventListener('click', () => {
-      let n = parseInt($('#playerCount').value || '3', 10);
-      n = Math.max(3, Math.min(20, n));
-      const cur = spion.players.slice();
-      if (n > cur.length) {
-        for (let i=cur.length; i<n; i++) cur.push(`Spieler ${i+1}`);
-      } else {
-        cur.length = n;
-      }
-      spion.players = cur;
+  // Events
+  $('#applyCount').addEventListener('click', () => {
+    let n = parseInt($('#playerCount').value || '3', 10);
+    n = Math.max(3, Math.min(20, n));
+    const cur = spion.players.slice();
+    if (n > cur.length) {
+      for (let i=cur.length; i<n; i++) cur.push(`Spieler ${i+1}`);
+    } else {
+      cur.length = n;
+    }
+    spion.players = cur;
+    window.__saveAppState();
+    renderSetup(root, spion, appState);
+  });
+
+  // Namen live übernehmen
+  $('#playersBox').addEventListener('input', (e)=>{
+    if (e.target.matches('input[data-i]')) {
+      const i = +e.target.dataset.i;
+      spion.players[i] = e.target.value || `Spieler ${i+1}`;
       window.__saveAppState();
-      renderSetup(root, spion, appState);
-    });
+    }
+  });
 
-    // Namen live übernehmen
-    $('#playersBox').addEventListener('input', (e)=>{
-      if (e.target.matches('input[data-i]')) {
-        const i = +e.target.dataset.i;
-        spion.players[i] = e.target.value || `Spieler ${i+1}`;
-        window.__saveAppState();
-      }
-    });
-
-    // Spy mode
-    $('#spyMode').addEventListener('change', (e)=>{
+  // Spy mode
+  $('#spyMode').addEventListener('change', (e)=>{
     spion.spyMode = e.target.value;
     window.__saveAppState();
     $('#spyFixed').style.display = spion.spyMode==='fixed' ? 'grid' : 'none';
     $('#spyRange').style.display = spion.spyMode==='random-range' ? 'grid' : 'none';
     const anyHint = $('#spyAnyHint');
     if (anyHint) anyHint.style.display = spion.spyMode==='random-any' ? 'block' : 'none';
-    });
+  });
 
-    const clampSpies = () => {
-      const max = spion.players.length;
-      spion.spies = Math.max(1, Math.min(max, parseInt($('#spyCount')?.value || spion.spies,10)));
-      spion.spiesMin = Math.max(1, Math.min(max, parseInt($('#spyMin')?.value || spion.spiesMin,10)));
-      spion.spiesMax = Math.max(1, Math.min(max, parseInt($('#spyMax')?.value || spion.spiesMax,10)));
-      if (spion.spiesMin > spion.spiesMax) spion.spiesMax = spion.spiesMin;
-      window.__saveAppState();
-    };
-    $('#spyFixed')?.addEventListener('input', clampSpies);
-    $('#spyRange')?.addEventListener('input', clampSpies);
+  const clampSpies = () => {
+    const max = spion.players.length;
+    spion.spies = Math.max(1, Math.min(max, parseInt($('#spyCount')?.value || spion.spies,10)));
+    spion.spiesMin = Math.max(1, Math.min(max, parseInt($('#spyMin')?.value || spion.spiesMin,10)));
+    spion.spiesMax = Math.max(1, Math.min(max, parseInt($('#spyMax')?.value || spion.spiesMax,10)));
+    if (spion.spiesMin > spion.spiesMax) spion.spiesMax = spion.spiesMin;
+    window.__saveAppState();
+  };
+  $('#spyFixed')?.addEventListener('input', clampSpies);
+  $('#spyRange')?.addEventListener('input', clampSpies);
 
-    $('#revealSpyCount').addEventListener('change', (e)=>{
+  $('#revealSpyCount').addEventListener('change', (e)=>{
     spion.revealSpyCount = e.target.checked;
     window.__saveAppState();
-    });
+  });
 
+  // Kategorien toggles
+  $('#catList').addEventListener('change', (e)=>{
+    if (e.target.matches('input[type="checkbox"][data-cat]')) {
+      const key = e.target.dataset.cat;
+      spion.categories.selected[key] = e.target.checked;
+      window.__saveAppState();
+    }
+  });
+  $('#allCats').addEventListener('click', ()=>{
+    Object.keys(allCategoryMap(spion)).forEach(k => spion.categories.selected[k] = true);
+    window.__saveAppState(); renderSetup(root, spion, appState);
+  });
+  $('#noneCats').addEventListener('click', ()=>{
+    Object.keys(allCategoryMap(spion)).forEach(k => spion.categories.selected[k] = false);
+    window.__saveAppState(); renderSetup(root, spion, appState);
+  });
 
-    // Kategorien toggles
-    $('#catList').addEventListener('change', (e)=>{
-      if (e.target.matches('input[type="checkbox"][data-cat]')) {
-        const key = e.target.dataset.cat;
-        spion.categories.selected[key] = e.target.checked;
-        window.__saveAppState();
-      }
-    });
-    $('#allCats').addEventListener('click', ()=>{
-      Object.keys(allCategoryMap(spion)).forEach(k => spion.categories.selected[k] = true);
-      window.__saveAppState(); renderSetup(root, spion, appState);
-    });
-    $('#noneCats').addEventListener('click', ()=>{
-      Object.keys(allCategoryMap(spion)).forEach(k => spion.categories.selected[k] = false);
-      window.__saveAppState(); renderSetup(root, spion, appState);
-    });
-     
-    $('#clearUsedWords').addEventListener('click', ()=>{
+  // Eigene Kategorie hinzufügen
+  $('#addCustomCat').addEventListener('click', ()=>{
+    const name = ($('#customCatName').value || '').trim();
+    const words = ($('#customCatWords').value || '')
+      .split(',').map(s=>s.trim()).filter(Boolean);
+    if (!name || words.length === 0) { toast('Bitte Namen & Wörter angeben.'); return; }
+    const id = 'custom_' + Date.now().toString(36);
+    spion.categories.custom.push({ id, name, words });
+    spion.categories.selected['custom:'+id] = true;
+    $('#customCatName').value = ''; $('#customCatWords').value = '';
+    window.__saveAppState();
+    renderSetup(root, spion, appState);
+    toast('Kategorie hinzugefügt');
+  });
+
+  // Benutzte Wörter löschen
+  $('#clearUsedWords').addEventListener('click', ()=>{
     if (!spion.usedWords?.length) { toast('Es gibt keine benutzten Wörter.'); return; }
     const ok = confirm('Benutzte Wörter wirklich löschen?\nDann können Wörter wieder gezogen werden.');
     if (!ok) return;
@@ -272,37 +304,21 @@
     window.__saveAppState();
     renderSetup(root, spion, appState);
     toast('Benutzte Wörter gelöscht.');
-    });
+  });
 
-    // Eigene Kategorie hinzufügen
-    $('#addCustomCat').addEventListener('click', ()=>{
-      const name = ($('#customCatName').value || '').trim();
-      const words = ($('#customCatWords').value || '')
-        .split(',').map(s=>s.trim()).filter(Boolean);
-      if (!name || words.length === 0) { toast('Bitte Namen & Wörter angeben.'); return; }
-      const id = 'custom_' + Date.now().toString(36);
-      spion.categories.custom.push({ id, name, words });
-      spion.categories.selected['custom:'+id] = true;
-      $('#customCatName').value = ''; $('#customCatWords').value = '';
-      window.__saveAppState();
-      renderSetup(root, spion, appState);
-      toast('Kategorie hinzugefügt');
-    });
+  // kleine Liste eigener Kategorien anzeigen
+  renderCustomList(spion);
 
-    // Speichern & Weiter
-    $('#saveGo').addEventListener('click', ()=>{
-      // Validierung
-      if (spion.players.length < 3) { toast('Mindestens 3 Spieler.'); return; }
-      const sel = selectedCategories(spion);
-      if (sel.totalWords === 0) { toast('Mindestens 1 Kategorie mit Wörtern auswählen.'); return; }
-      spion.configSaved = true;        // 👈 NEU: Konfiguration aktiv markieren
-        window.__saveAppState();
-      location.hash = '#/spion/play';
-    });
-
-    // kleine Liste eigener Kategorien anzeigen
-    renderCustomList(spion);
-  }
+  // Speichern & Weiter
+  $('#saveGo').addEventListener('click', ()=>{
+    if (spion.players.length < 3) { toast('Mindestens 3 Spieler.'); return; }
+    const sel = selectedCategories(spion);
+    if (sel.totalWords === 0) { toast('Mindestens 1 Kategorie mit Wörtern auswählen.'); return; }
+    spion.configSaved = true;
+    window.__saveAppState();
+    location.hash = '#/spion/play';
+  });
+}
 
   function playerRow(i, name){
     return `
