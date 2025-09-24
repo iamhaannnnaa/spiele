@@ -145,3 +145,54 @@ input[type="checkbox"]{ width:18px; height:18px; }
   text-align: center;       /* zentriert */
   margin-top: 6px;
 }
+
+/* Rückseiten-Inhalt */
+.backcontent {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* alles zentriert außer Label */
+  justify-content: center;
+  gap: 14px; /* mehr Abstand zwischen den Blöcken */
+  height: 100%;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.backcontent .label {
+  align-self: flex-start;   /* bleibt links */
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.mainword {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: .4px;
+}
+
+/* Spion-Anzeige */
+.spy {
+  color: #ff5b5b;
+  font-weight: 900;
+  font-size: 28px;
+  text-align: center;
+}
+.spycount {
+  color: #ff5b5b;
+  font-weight: 700;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* Hinweis am unteren Ende */
+.hint-bottom {
+  margin-top: auto;   /* schiebt den Hinweis nach unten */
+  text-align: center;
+}
+
+/* Karte allgemein höher machen */
+.flip {
+  height: 300px; /* vorher 220px */
+}
