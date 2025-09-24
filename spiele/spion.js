@@ -433,21 +433,18 @@ function addUsedWord(spion, word){
             <div class="hint">Tippe, um die Karte aufzudecken</div>
             <div class="word">${escapeHtml(name)}</div>
           </div>
-          <div class="">
+          <div class="face back">
             ${spion.round.roles[i] === 'spy'
               ? `<div>
                   <div class="spy">SPION</div>
                   ${spion.revealSpyCount ? `<div class="hint">Ihr seid ${spion.round.spiesCount}</div>` : ``}
-                  <div class="hint">Tippe erneut, um weiterzugeben</div>
                 </div>`
               : `<div>
                   <div class="hint">Wort</div>
                   <div class="word">${escapeHtml(spion.round.word)}</div>
-                  <div class="hint">Tippe erneut, um weiterzugeben</div>
                 </div>`
             }
           </div>
-
         </div>
       </div>
     </div>
