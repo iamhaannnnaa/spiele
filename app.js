@@ -19,7 +19,8 @@
         <article class="card">
           <h2>Spiele</h2>
           <p class="subtitle">Wähle ein Spiel aus dem Menü.</p>
-          <a class="primary" href="#/spion/setup" aria-label="Spion öffnen">🕵️‍♀️ Spion öffnen</a>
+          <a class="primary" href="#/spion" aria-label="Spion öffnen">🕵️‍♀️ Spion öffnen</a>
+
         </article>
 
         <article class="card">

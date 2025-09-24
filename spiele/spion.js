@@ -50,22 +50,43 @@
     return app.spion;
   }
 
+  function isConfigured(spion){
+  const playersOk = Array.isArray(spion.players) && spion.players.length >= 3;
+  const sel = selectedCategories(spion);
+  const wordsOk = sel.totalWords > 0;
+  return playersOk && wordsOk;
+}
+
+
   // ---------- Router ----------
   function route(hash, appState){
-    const spion = ensureState(appState);
-    const app = document.getElementById('app');
+  const spion = ensureState(appState);
+  const app = document.getElementById('app');
 
-    if (hash === '/spion' || hash === '/spion/setup') {
-      renderSetup(app, spion, appState);
-      return;
+  if (hash === '/spion') {
+    // Wenn schon konfiguriert → direkt ins Spiel, sonst ins Setup
+    if (isConfigured(spion)) {
+      location.hash = '#/spion/play';
+    } else {
+      location.hash = '#/spion/setup';
     }
-    if (hash === '/spion/play') {
-      renderPlay(app, spion, appState);
-      return;
-    }
-    // fallback
-    location.hash = '#/spion/setup';
+    return;
   }
+
+  if (hash === '/spion/setup') {
+    renderSetup(app, spion, appState);
+    return;
+  }
+
+  if (hash === '/spion/play') {
+    renderPlay(app, spion, appState);
+    return;
+  }
+
+  // fallback
+  location.hash = '#/spion/setup';
+}
+
 
   // ---------- Setup View ----------
   function renderSetup(root, spion, appState){
