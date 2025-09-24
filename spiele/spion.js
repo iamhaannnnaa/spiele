@@ -522,14 +522,14 @@ function spyLabel(n){
             spion.round.roles[i] === 'spy'
             ? `
               <div class="centerstack">
-                 ${spion.revealSpyCount ? `<div class="label center red">${spyLabel(spion.round.spiesCount)}</div>` : ``}
+                <div class="label center red">${spyLabel(spion.round.spiesCount)}</div>
                 <div class="word mainword red">SPION</div>
                 <div class="hint hint-mid">Tippe erneut, um weiterzugeben</div>
               </div>
             `
             : `
               <div class="centerstack">
-                <div class="label center">Wort</div>
+                <div class="label center muted">Wort</div>
                 <div class="word mainword">${escapeHtml(spion.round.word)}</div>
                 <div class="hint hint-mid">Tippe erneut, um weiterzugeben</div>
               </div>
