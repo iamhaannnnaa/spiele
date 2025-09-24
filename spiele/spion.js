@@ -356,6 +356,10 @@ function addUsedWord(spion, word){
   if (!spion.usedWords.includes(word)) spion.usedWords.push(word);
 }
 
+function spyLabel(n){
+  // 1 = "Du bist der einzige", >=2 = "Ihr seid zu <n>."
+  return (n <= 1) ? 'Du bist der einzige' : `Ihr seid zu ${n}.`;
+}
 
   function renderCustomList(spion){
     const list = $('#customList');
@@ -447,7 +451,7 @@ function addUsedWord(spion, word){
             spion.round.roles[i] === 'spy'
             ? `
               <div class="centerstack">
-                <div class="label center red">Ihr seid ${spion.round.spiesCount}</div>
+                 ${spion.revealSpyCount ? `<div class="label center red">${spyLabel(spion.round.spiesCount)}</div>` : ``}
                 <div class="word mainword red">SPION</div>
                 <div class="hint hint-mid">Tippe erneut, um weiterzugeben</div>
               </div>

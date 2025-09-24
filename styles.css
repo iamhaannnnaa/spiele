@@ -211,3 +211,6 @@ input[type="checkbox"]{ width:18px; height:18px; }
   margin-top: 6px;
   text-align: center;
 }
+
+/* Rot-Färbung für Label + Hauptwort bei Spion */
+.red { color: #ff5b5b; }
