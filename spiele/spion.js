@@ -369,17 +369,24 @@ function addUsedWord(spion, word){
   // ---------- Play View ----------
   function renderPlay(root, spion, appState){
     // Headerleiste
+    
     root.innerHTML = `
-      <article class="card">
-        <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
-          <a href="#/" class="btn small">← Menü</a>
-          <a href="#/spion/setup" class="btn small">⚙️ Einstellungen</a>
-        </div>
-        <h2>🕵️‍♀️ Spion – Spiel</h2>
-        <p class="subtitle">Gib das Handy reihum weiter und deckt eure Karten nacheinander auf.</p>
-        <div id="playArea"></div>
-      </article>
-    `;
+  <article class="card">
+    <div style="display:flex; justify-content:space-between; gap:10px; margin-bottom:8px;">
+      <a href="#/" class="btn small">← Menü</a>
+      <a href="#/spion/setup" class="btn small">⚙️ Einstellungen</a>
+    </div>
+
+    <div class="titlebar">
+      <h2>🕵️‍♀️ Spion – Spiel</h2>
+      ${spion.started ? `<span class="badge">Spieler ${spion.round.index + 1} / ${spion.players.length}</span>` : ``}
+    </div>
+
+    <p class="subtitle">Gib das Handy reihum weiter und deckt eure Karten nacheinander auf.</p>
+    <div id="playArea"></div>
+  </article>
+`;
+
 
     const area = $('#playArea');
 
@@ -419,7 +426,6 @@ function addUsedWord(spion, word){
     const name = spion.players[i];
     area.innerHTML = `
     <div class="row">
-      <div class="badge">Spieler ${i+1} / ${spion.players.length}</div>
       <div class="stage">
         <div class="flip ${spion.round.revealed ? 'revealed' : ''}" id="flip"
             role="button" tabindex="0" aria-label="Karte aufdecken oder weitergeben">
@@ -427,23 +433,23 @@ function addUsedWord(spion, word){
             <div class="hint">Tippe, um die Karte aufzudecken</div>
             <div class="word">${escapeHtml(name)}</div>
           </div>
-          <div class="face back">
+          <div class="">
             ${spion.round.roles[i] === 'spy'
               ? `<div>
                   <div class="spy">SPION</div>
                   ${spion.revealSpyCount ? `<div class="hint">Ihr seid ${spion.round.spiesCount}</div>` : ``}
+                  <div class="hint">Tippe erneut, um weiterzugeben</div>
                 </div>`
               : `<div>
                   <div class="hint">Wort</div>
                   <div class="word">${escapeHtml(spion.round.word)}</div>
+                  <div class="hint">Tippe erneut, um weiterzugeben</div>
                 </div>`
             }
           </div>
+
         </div>
       </div>
-      <p class="hint" style="text-align:center; margin-top:10px;">
-        ${spion.round.revealed ? 'Tippe erneut, um weiterzugeben' : 'Tippe, um aufzudecken'}
-      </p>
     </div>
   `;
 
