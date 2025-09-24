@@ -425,30 +425,41 @@ function addUsedWord(spion, word){
     // Karte rendern
     const name = spion.players[i];
     area.innerHTML = `
-    <div class="row">
-      <div class="stage">
-        <div class="flip ${spion.round.revealed ? 'revealed' : ''}" id="flip"
-            role="button" tabindex="0" aria-label="Karte aufdecken oder weitergeben">
-          <div class="face front">
-            <div class="hint">Tippe, um die Karte aufzudecken</div>
-            <div class="word">${escapeHtml(name)}</div>
-          </div>
-          <div class="face back">
-            ${spion.round.roles[i] === 'spy'
-              ? `<div>
+  <div class="row">
+    <div class="stage">
+      <div class="flip ${spion.round.revealed ? 'revealed' : ''}" id="flip"
+           role="button" tabindex="0" aria-label="Karte aufdecken oder weitergeben">
+
+        <div class="face front">
+          <div class="word">${escapeHtml(name)}</div>
+          <div class="hint">Tippe, um die Karte aufzudecken</div>
+        </div>
+
+        <div class="face back">
+          ${
+            spion.round.roles[i] === 'spy'
+              ? `
+                <div>
                   <div class="spy">SPION</div>
                   ${spion.revealSpyCount ? `<div class="hint">Ihr seid ${spion.round.spiesCount}</div>` : ``}
-                </div>`
-              : `<div>
+                  <div class="hint">Tippe erneut, um weiterzugeben</div>
+                </div>
+              `
+              : `
+                <div>
                   <div class="hint">Wort</div>
                   <div class="word">${escapeHtml(spion.round.word)}</div>
-                </div>`
-            }
-          </div>
+                  <div class="hint">Tippe erneut, um weiterzugeben</div>
+                </div>
+              `
+          }
         </div>
+
       </div>
     </div>
-  `;
+  </div>
+`;
+
 
 
     const flip = $('#flip');
