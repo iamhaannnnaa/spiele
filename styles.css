@@ -20,115 +20,112 @@ html,body{
 }
 
 .topbar{
-  position: sticky;
-  top: 0;
+  position: sticky; top: 0;
   backdrop-filter: blur(6px);
   background: rgba(11,16,32,.6);
   border-bottom: 1px solid rgba(255,255,255,.06);
   padding: 12px 16px;
 }
-.topbar h1{
-  margin: 0;
-  font-size: 18px;
-  letter-spacing: .3px;
-}
+.topbar h1{ margin: 0; font-size: 18px; letter-spacing: .3px; }
 
-.container{
-  padding: 20px 16px 120px;
-  max-width: 800px;
-  margin: 0 auto;
-}
+.container{ padding: 20px 16px 120px; max-width: 860px; margin: 0 auto; }
 
-.grid{
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-@media (min-width: 520px){
-  .grid{ grid-template-columns: repeat(2, 1fr); }
-}
+.grid{ display: grid; grid-template-columns: 1fr; gap: 14px; }
+@media (min-width: 520px){ .grid{ grid-template-columns: repeat(2, 1fr); } }
 
 .card{
   background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
   border: 1px solid rgba(255,255,255,.08);
   border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow);
+  padding: 16px; box-shadow: var(--shadow);
 }
 
 .card button, .card a.primary{
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   border: 1px solid rgba(255,255,255,.12);
-  background: #202744;
-  color: var(--text);
-  padding: 12px 14px;
-  border-radius: 14px;
-  text-decoration: none;
-  font-weight: 600;
+  background: #202744; color: var(--text);
+  padding: 12px 14px; border-radius: 14px; text-decoration: none; font-weight: 600;
 }
-.card button:hover, .card a.primary:hover{
-  filter: brightness(1.08);
-}
+.card button:hover, .card a.primary:hover{ filter: brightness(1.08); }
 
-.subtitle{
-  margin: 8px 0 14px;
-  color: var(--muted);
-  font-size: 14px;
-}
-
-/* Spion Platzhalterliste */
-.list{
-  display: grid;
-  gap: 10px;
-  margin-top: 10px;
-}
-.list .row{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px; border:1px solid rgba(255,255,255,.08);
-  border-radius:12px; background:#11162b;
-}
-.row label{ display:flex; align-items:center; gap:10px; }
+.subtitle{ margin: 8px 0 14px; color: var(--muted); font-size: 14px; }
 
 .count{
-  display:inline-block;
-  background: rgba(110,231,183,.15);
-  color: var(--accent);
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
+  display:inline-block; background: rgba(110,231,183,.15); color: var(--accent);
+  padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700;
 }
 
 /* Floating Action Button (Reset) */
 .fab{
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  width: 56px; height: 56px;
-  border-radius: 50%;
+  position: fixed; right: 16px; bottom: 16px;
+  width: 56px; height: 56px; border-radius: 50%;
   border: 1px solid rgba(255,255,255,.14);
-  background: #1c254a;
-  color: var(--text);
-  font-size: 22px;
-  box-shadow: var(--shadow);
+  background: #1c254a; color: var(--text);
+  font-size: 22px; box-shadow: var(--shadow);
 }
 .fab:active{ transform: scale(.98); }
 .fab.danger{ background:#361b1b; border-color:#4c2525; color: var(--danger); }
 
 /* Toast */
 .toast{
-  position: fixed;
-  left: 50%;
-  bottom: 86px;
-  transform: translateX(-50%);
-  background:#10162a;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:12px;
-  padding:10px 12px;
-  font-size:14px;
-  box-shadow: var(--shadow);
+  position: fixed; left: 50%; bottom: 86px; transform: translateX(-50%);
+  background:#10162a; border:1px solid rgba(255,255,255,.12);
+  border-radius:12px; padding:10px 12px; font-size:14px; box-shadow: var(--shadow);
 }
+
+/* --- Form / Controls --- */
+.form{ display: grid; gap: 14px; }
+.row{ display: grid; gap: 8px; }
+.row.inline{ grid-template-columns: 1fr 1fr; gap: 10px; }
+label.title{ font-weight: 700; font-size: 14px; }
+.hint{ color: var(--muted); font-size: 13px; }
+
+input[type="text"], input[type="number"], select, textarea{
+  width: 100%; padding: 10px 12px; border-radius: 12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:#11162b; color: var(--text); font-size: 14px;
+}
+input[type="checkbox"]{ width:18px; height:18px; }
+
+.badge{ display:inline-flex; align-items:center; gap:6px;
+  background:#11162b; border:1px solid rgba(255,255,255,.12);
+  padding:6px 10px; border-radius: 999px; font-size: 12px; }
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:12px 14px; border-radius:14px; font-weight:700;
+  border:1px solid rgba(255,255,255,.12); background:#202744; color:var(--text);
+}
+.btn.small{ padding:8px 10px; font-weight:600; font-size: 13px; }
+.btn.ghost{ background:transparent; }
+.btn.accent{ background:#1f3f3a; border-color:#2b5a52; color: var(--accent); }
+
+/* Checkliste */
+.checklist{ display:grid; gap:10px; }
+.checkitem{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 12px; border:1px solid rgba(255,255,255,.08);
+  border-radius:12px; background:#11162b;
+}
+
+/* Spielerliste */
+.players{ display:grid; gap:10px; }
+.playerrow{ display:grid; grid-template-columns: 56px 1fr; gap:10px; align-items:center; }
+.playerrow span{ text-align:center; opacity:.8; }
+
+/* Flip Card fürs Spiel */
+.stage{ perspective: 1000px; margin-top: 12px; }
+.flip{
+  position: relative; width: 100%; height: 220px;
+  transform-style: preserve-3d; transition: transform .35s ease;
+}
+.flip.revealed{ transform: rotateY(180deg); }
+.face{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:10px;
+  backface-visibility: hidden; border-radius:16px;
+  background:#11162b; border:1px solid rgba(255,255,255,.12);
+}
+.face.back{ transform: rotateY(180deg); }
+.word{ font-size: 26px; font-weight: 800; letter-spacing:.4px; }
+.spy{ color: #ff5b5b; font-weight: 900; font-size: 28px; }

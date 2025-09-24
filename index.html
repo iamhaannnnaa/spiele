@@ -3,29 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hanna Spiel</title>
+  <title>Ben stinkt</title>
   <meta name="theme-color" content="#111827">
   <link rel="icon" href="data:;base64,=">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="styles.css" />
-  <meta name="description" content="Kleine Spiele-Webapp. Menü + Spion (Platzhalter).">
 </head>
 <body>
   <header class="topbar">
-    <h1>Hanna Spiel</h1>
+    <h1>Ben stinkt</h1>
   </header>
 
   <main id="app" class="container">
-    <!-- Inhalt wird von app.js gerendert -->
     <noscript>Bitte JavaScript aktivieren.</noscript>
   </main>
 
-  <!-- Floating Reset Button unten rechts -->
   <button id="resetBtn" class="fab" aria-label="Alle gespeicherten Inhalte löschen" title="Alles zurücksetzen">⟲</button>
-
-  <!-- kleine Status/Toast-Ausgabe (accessibility) -->
   <div id="toast" role="status" aria-live="polite" class="toast" hidden></div>
 
+  <!-- NEU: Spion Modul -->
+  <script defer src="spiele/spion.js"></script>
+  <!-- Router/App (aktualisierte Version unten) -->
   <script defer src="app.js"></script>
 </body>
 </html>
