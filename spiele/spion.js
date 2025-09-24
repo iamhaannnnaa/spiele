@@ -135,7 +135,6 @@ function renderSetup(root, spion, appState){
             <div class="row">
               <select id="spyMode">
                 <option value="fixed" ${spion.spyMode==='fixed'?'selected':''}>Fixe Anzahl</option>
-                <option value="random-any" ${spion.spyMode==='random-any'?'selected':''}>Zufällig (1..Spieleranzahl)</option>
                 <option value="random-range" ${spion.spyMode==='random-range'?'selected':''}>Zufällig im Bereich</option>
               </select>
             </div>
@@ -243,8 +242,6 @@ function renderSetup(root, spion, appState){
     window.__saveAppState();
     $('#spyFixed').style.display = spion.spyMode==='fixed' ? 'grid' : 'none';
     $('#spyRange').style.display = spion.spyMode==='random-range' ? 'grid' : 'none';
-    const anyHint = $('#spyAnyHint');
-    if (anyHint) anyHint.style.display = spion.spyMode==='random-any' ? 'block' : 'none';
   });
 
   const clampSpies = () => {
@@ -524,8 +521,6 @@ function spyLabel(n){
     let spiesN = 1;
     if (spion.spyMode === 'fixed') {
       spiesN = clamp(spion.spies, 1, max);
-    } else if (spion.spyMode === 'random-any') {
-      spiesN = randInt(1, max);
     } else if (spion.spyMode === 'random-range') {
       const min = clamp(spion.spiesMin, 1, max);
       const maxv = clamp(spion.spiesMax, 1, max);
@@ -533,6 +528,7 @@ function spyLabel(n){
       const hi = Math.max(min, maxv);
       spiesN = randInt(lo, hi);
     }
+
     spiesN = Math.min(spiesN, n); // Sicherheit
 
     // Wort auswählen – ohne Wiederholung
